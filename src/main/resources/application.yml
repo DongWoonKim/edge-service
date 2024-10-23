@@ -7,8 +7,17 @@ server:
 spring:
   application:
     name: edge-service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 5000 # 2s
+        response-timeout: 10s
+        pool:
+          type: elastic
+          max-idle-time: 15s
+          max-life-time: 60s
       mvc:
         routes:
           - id: catalog-route
@@ -17,9 +26,6 @@ spring:
               - Path=/books/**
           - id: order-route
             uri:
-              ${CATALOG_SERVICE_URL:http://localhost:9002/orders}
+              ${ORDER_SERVICE_URL:http://localhost:9002/orders}
             predicates:
               - Path=/orders/**
-
-  lifecycle:
-    timeout-per-shutdown-phase: 15s
