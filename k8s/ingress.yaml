@@ -1,21 +1,3 @@
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: polar-ingress
-#  annotations:
-#    nginx.ingress.kubernetes.io/rewrite-target: /
-#spec:
-#  rules:
-#    - host: ""
-#      http:
-#        paths:
-#          - path: /
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: edge-service
-#                port:
-#                  number: 80  # edge-service로 80번 포트로 전달
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
