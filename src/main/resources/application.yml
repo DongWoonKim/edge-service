@@ -65,6 +65,14 @@ spring:
             - name: CircuitBreaker
               args:
                 name: orderCircuitBreaker
+        - id: web-front-route
+          uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887/webs}
+          predicates:
+            - Path=/webs/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: webCircuitBreaker
 resilience4j:
   circuitbreaker:
     configs:
