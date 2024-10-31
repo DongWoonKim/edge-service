@@ -68,7 +68,7 @@ spring:
         - id: web-front-route
           uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887/webs}
           predicates:
-            - Path=/webs/**
+            - Path=/webs/**, /css/**, /js/**
           filters:
             - name: CircuitBreaker
               args:
