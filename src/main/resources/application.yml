@@ -73,6 +73,14 @@ spring:
             - name: CircuitBreaker
               args:
                 name: webCircuitBreaker
+        - id: auth-route
+          uri: ${AUTH_SERVICE_URL:http://localhost:8886/auths}
+          predicates:
+            - Path=/auths/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: authCircuitBreaker
 resilience4j:
   circuitbreaker:
     configs:
@@ -88,3 +96,15 @@ resilience4j:
 logging:
   level:
     io.github.resilience4j: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+polar:
+  auth-service-uri: ${AUTH_SERVICE_URL:http://localhost:8886}

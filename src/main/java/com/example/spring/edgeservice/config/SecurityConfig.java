@@ -22,7 +22,11 @@ public class SecurityConfig {
                                 "/static/**",
                                 "/webs/hello",
                                 "/webs/login",
-                                "/webs/join"
+                                "/webs/join",
+                                "/books",
+                                "/books/**",
+                                "/orders",
+                                "/orders/**"
                         ).permitAll()
                         .anyExchange().authenticated()
                 )
