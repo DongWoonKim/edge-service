@@ -5,30 +5,33 @@ server:
     idle-timeout: 15s
   shutdown: graceful
 spring:
-  session:
-    store-type: redis  # 또는 jdbc, mongo 등
-    redis:
-      namespace: polar:edge
+#  session:
+#    store-type: redis  # 또는 jdbc, mongo 등
+#    redis:
+#      namespace: polar:edge
   application:
     name: edge-service
   lifecycle:
     timeout-per-shutdown-phase: 15s
-  data:
-    redis:
-      connect-timeout: 2s
-      host: polar-redis
-      port: 6379
-      timeout: 1s
+#  data:
+#    redis:
+##      host: ${SPRING_REDIS_HOST:localhost}
+#      host: polar-redis
+#      port: 6379
+#      connect-timeout: 2s
+#      timeout: 10s             # Redis와의 일반적인 작업의 시간 제한
+#      ssl:
+#        enabled: false
   cloud:
     gateway:
       default-filters:
         - SaveSession
-        - name: RequestRateLimiter
-          args:
-            redis-rate-limiter:
-              replenishRate: 10
-              burstCapacity: 20
-              requestedTokens: 1
+#        - name: RequestRateLimiter
+#          args:
+#            redis-rate-limiter:
+#              replenishRate: 10
+#              burstCapacity: 20
+#              requestedTokens: 1
         - name: Retry
           args:
             retries: 3

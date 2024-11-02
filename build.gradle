@@ -32,7 +32,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
@@ -40,10 +40,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    // Testcontainers Core
-    testImplementation 'org.testcontainers:testcontainers'
-    // MySQL용 Testcontainers
-    testImplementation 'org.testcontainers:mysql'
     // JUnit 5 통합
     testImplementation 'org.testcontainers:junit-jupiter'
 }

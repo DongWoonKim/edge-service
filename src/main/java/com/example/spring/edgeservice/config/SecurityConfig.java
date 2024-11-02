@@ -2,7 +2,6 @@ package com.example.spring.edgeservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -26,7 +25,9 @@ public class SecurityConfig {
                                 "/books",
                                 "/books/**",
                                 "/orders",
-                                "/orders/**"
+                                "/orders/**",
+                                "/actuator/**",          // actuator 모든 엔드포인트 허용
+                                "/actuator/health/**"    // 명시적으로 health 엔드포인트 허용
                         ).permitAll()
                         .anyExchange().authenticated()
                 )
