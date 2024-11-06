@@ -8,14 +8,10 @@ import com.example.spring.edgeservice.dto.ValidTokenResponseDTO;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

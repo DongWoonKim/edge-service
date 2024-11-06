@@ -4,6 +4,13 @@ server:
     connection-timeout: 2s
     idle-timeout: 15s
   shutdown: graceful
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    io.github.resilience4j: DEBUG
+
 spring:
 #  session:
 #    store-type: redis  # 또는 jdbc, mongo 등
@@ -51,6 +58,12 @@ spring:
           max-idle-time: 15s
           max-life-time: 60s
       routes:
+        - id: favicon
+          predicates:
+            - Path=/favicon.ico
+          filters:
+            - SetStatus=404
+          uri: no://op
         - id: catalog-route
           uri: ${CATALOG_SERVICE_URL:http://localhost:9001/books}
           predicates:
@@ -71,7 +84,7 @@ spring:
         - id: web-front-route
           uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887/webs}
           predicates:
-            - Path=/webs/**, /css/**, /js/**
+            - Path=/webs/**, /login, /access-denied, /css/**, /js/**
           filters:
             - name: CircuitBreaker
               args:
@@ -96,9 +109,6 @@ resilience4j:
     configs:
       default:
         timeout-duration: 5s
-logging:
-  level:
-    io.github.resilience4j: DEBUG
 
 management:
   endpoints:

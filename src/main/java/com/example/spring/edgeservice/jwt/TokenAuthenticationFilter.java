@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -29,19 +28,23 @@ public class TokenAuthenticationFilter implements WebFilter {
         String requestPath = exchange.getRequest().getPath().value();
         log.info("Token filter path :: {}", requestPath);
         // 인증이 필요 없는 경로는 필터를 통과시킴
-        if ("/refresh-token".equals(requestPath)) {
+        if (
+                "/refresh-token".equals(requestPath) ||
+                        "/webs/login".equals(requestPath)
+        ) {
+            log.info("No Auth");
             return chain.filter(exchange);
         }
 
         // 토큰 추출
         String token = resolveToken(exchange.getRequest());
+        log.info("Token filter token :: {}", token);
         if (token != null) {
             return Mono.just(token)
                     .flatMap(tokenProvider::validToken)
                     .flatMap(validationResult -> {
                         log.info("Token filter validationResult :: {}",  validationResult);
                         if (validationResult == 1) {
-                            // 토큰이 유효할 경우
                             // 토큰이 유효할 경우
                             return tokenProvider.getAuthentication(token)  // Mono<Authentication>
                                     .flatMap(authentication -> {
