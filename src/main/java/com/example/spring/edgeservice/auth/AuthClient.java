@@ -1,16 +1,18 @@
 package com.example.spring.edgeservice.auth;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import com.example.spring.edgeservice.dto.AuthenticationRequestDTO;
+import com.example.spring.edgeservice.dto.AuthenticationResponseDTO;
+import com.example.spring.edgeservice.dto.ValidTokenRequestDTO;
+import com.example.spring.edgeservice.dto.ValidTokenResponseDTO;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@Component
-@RequiredArgsConstructor
-public class AuthClient {
+@FeignClient(name = "authClient", url = "${polar.auth-service-uri}")
+public interface AuthClient {
+    @PostMapping("/auths/validToken")
+    ValidTokenResponseDTO validToken(@RequestBody ValidTokenRequestDTO requestDTO);
 
-    private static final String AUTH_ROOT_API = "/auths";
-    private final WebClient webClient;
-
-
-
+    @PostMapping("/auths/authentication")
+    AuthenticationResponseDTO getAuthentication(@RequestBody AuthenticationRequestDTO requestDTO);
 }
