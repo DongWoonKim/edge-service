@@ -1,9 +1,6 @@
 package com.example.spring.edgeservice.auth;
 
-import com.example.spring.edgeservice.dto.AuthenticationRequestDTO;
-import com.example.spring.edgeservice.dto.AuthenticationResponseDTO;
-import com.example.spring.edgeservice.dto.ValidTokenRequestDTO;
-import com.example.spring.edgeservice.dto.ValidTokenResponseDTO;
+import com.example.spring.edgeservice.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
