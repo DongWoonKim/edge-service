@@ -82,15 +82,15 @@ spring:
               args:
                 name: orderCircuitBreaker
         - id: web-front-route
-          uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887/webs}
+          uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887}
           predicates:
-            - Path=/webs/**, /login, /refresh-token, /access-denied, /css/**, /js/**
+            - Path=/webs/**, /login, /join, /refresh-token, /access-denied, /css/**, /js/**
           filters:
             - name: CircuitBreaker
               args:
                 name: webCircuitBreaker
         - id: auth-route
-          uri: ${AUTH_SERVICE_URL:http://localhost:8886/auths}
+          uri: ${AUTH_SERVICE_URL:http://localhost:8886}
           predicates:
             - Path=/auths/**
           filters:
