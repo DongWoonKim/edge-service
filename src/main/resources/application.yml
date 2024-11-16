@@ -81,6 +81,12 @@ spring:
             - name: CircuitBreaker
               args:
                 name: orderCircuitBreaker
+        - id: root-redirect
+          uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887}
+          predicates:
+            - Path=/
+          filters:
+            - RedirectTo=302,/webs
         - id: web-front-route
           uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887}
           predicates:
