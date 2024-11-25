@@ -20,8 +20,6 @@ spring:
     name: edge-service
   lifecycle:
     timeout-per-shutdown-phase: 15s
-
-
   data:
     redis:
       host: ${SPRING_REDIS_HOST:localhost}
@@ -120,13 +118,9 @@ resilience4j:
         timeout-duration: 5s
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-  endpoint:
-    health:
-      show-details: always
+  health:
+    redis:
+      enabled: false
 
 polar:
   auth-service-uri: ${AUTH_SERVICE_URL:http://localhost:8886}
