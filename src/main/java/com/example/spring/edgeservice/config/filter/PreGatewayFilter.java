@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -35,12 +36,24 @@ public class PreGatewayFilter extends AbstractGatewayFilterFactory<PreGatewayFil
                 return exchange.getResponse().setComplete();
             }
 
-            if (authServiceClient.validToken(token) == 2) {
-                exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.valueOf(config.getAuthenticationTimeout()));
-                return exchange.getResponse().setComplete();
-            }
+            return authServiceClient.validToken(token)
+                    .flatMap(valided -> {
+                        log.info("token valid {}", valided);
+                        if (valided == 2) {
+                            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.valueOf(config.getAuthenticationTimeout()));
+                            return exchange.getResponse().setComplete();
+                        } else if (valided == -1) {
+                            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.name()));
+                            return exchange.getResponse().setComplete();
+                        }
 
-            return chain.filter(exchange);
+                        return chain.filter(exchange);
+                    })
+                    .onErrorResume(e -> {
+                        log.error("Error during token validation", e);
+                        exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+                        return exchange.getResponse().setComplete();
+                    });
         };
     }
 
