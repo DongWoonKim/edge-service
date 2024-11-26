@@ -12,6 +12,8 @@ logging:
     io.github.resilience4j: DEBUG
 
 spring:
+  redis:
+    enabled: false
   session:
     store-type: redis  # 또는 jdbc, mongo 등
     redis:
@@ -32,32 +34,32 @@ spring:
         enabled: true
   cloud:
     gateway:
-      default-filters:
-        - SaveSession
-        - name: RequestRateLimiter
-          args:
-            redis-rate-limiter:
-              replenishRate: 10
-              burstCapacity: 20
-              requestedTokens: 1
-        - name: Retry
-          args:
-            retries: 3
-            methods: GET
-            series: SERVER_ERROR
-            exceptions: java.io.IOException, java.util.concurrent.TimeoutException
-            backoff:
-              firstBackoff: 50ms
-              maxBackOff: 500ms
-              factor: 2
-              basedOnPreviousValue: false
-      httpclient:
-        connect-timeout: 5000 # 2s
-        response-timeout: 10s
-        pool:
-          type: elastic
-          max-idle-time: 15s
-          max-life-time: 60s
+#      default-filters:
+#        - SaveSession
+#        - name: RequestRateLimiter
+#          args:
+#            redis-rate-limiter:
+#              replenishRate: 10
+#              burstCapacity: 20
+#              requestedTokens: 1
+#        - name: Retry
+#          args:
+#            retries: 3
+#            methods: GET
+#            series: SERVER_ERROR
+#            exceptions: java.io.IOException, java.util.concurrent.TimeoutException
+#            backoff:
+#              firstBackoff: 50ms
+#              maxBackOff: 500ms
+#              factor: 2
+#              basedOnPreviousValue: false
+#      httpclient:
+#        connect-timeout: 5000 # 2s
+#        response-timeout: 10s
+#        pool:
+#          type: elastic
+#          max-idle-time: 15s
+#          max-life-time: 60s
       routes:
         - id: favicon
           predicates:
@@ -70,6 +72,7 @@ spring:
           predicates:
             - Path=/books/**
           filters:
+            - name: PreGatewayFilter
             - name: CircuitBreaker
               args:
                 name: catalogCircuitBreaker
@@ -82,24 +85,10 @@ spring:
             - name: CircuitBreaker
               args:
                 name: orderCircuitBreaker
-        - id: root-redirect
-          uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887}
-          predicates:
-            - Path=/
-          filters:
-            - RedirectTo=302,/webs
-        - id: web-front-route
-          uri: ${WEB_FRONT_SERVICE_URL:http://localhost:8887}
-          predicates:
-            - Path=/webs/**, /login, /join, /refresh-token, /access-denied, /css/**, /js/**
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: webCircuitBreaker
         - id: auth-route
           uri: ${AUTH_SERVICE_URL:http://localhost:8886}
           predicates:
-            - Path=/auths/**
+            - Path=/auths/**, /css/**, /js/**
           filters:
             - name: CircuitBreaker
               args:
@@ -123,4 +112,4 @@ management:
       enabled: false
 
 polar:
-  auth-service-uri: ${AUTH_SERVICE_URL:http://localhost:8886}
+  auth-service-url: ${AUTH_SERVICE_URL:http://localhost:8886}
