@@ -34,7 +34,7 @@ spring:
         enabled: true
   cloud:
     gateway:
-#      default-filters:
+      #      default-filters:
 #        - SaveSession
 #        - name: RequestRateLimiter
 #          args:
